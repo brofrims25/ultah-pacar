@@ -12,37 +12,39 @@
             background: url('background.png') center/cover no-repeat; font-family: 'Dancing Script', cursive; overflow: hidden;
         }
 
-        /* Hujan Emoji */
         .emoji-rain { position: absolute; top: -10%; font-size: 20px; animation: rain linear infinite; pointer-events: none; }
         @keyframes rain { to { transform: translateY(110vh) rotate(360deg); } }
 
-        /* Tombol Surat (Responsif) */
         #suratBtn { width: 120px; max-width: 40vw; cursor: pointer; transition: 0.3s; z-index: 10; }
         #suratBtn:hover { transform: scale(1.1) rotate(5deg); }
 
-        /* Kertas Surat (Responsif) */
         #letter-container { 
             display: none; position: relative; 
-            width: 90%; max-width: 350px; /* Lebar maksimal agar tidak terlalu lebar di PC */
-            height: 70vh; max-height: 500px;
-            background: rgba(255,255,255,0.9); padding: 20px; border-radius: 15px;
+            width: 90%; max-width: 350px; height: 75vh; max-height: 550px;
+            background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px;
             border: 2px solid #ffccd5; box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
-            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
         }
         
-        #paper { width: 100%; height: 100%; object-fit: contain; }
-        #text { 
-            position: absolute; top: 15%; left: 10%; right: 10%; 
-            font-size: clamp(16px, 5vw, 22px); /* Font otomatis menyesuaikan layar */
-            color: #d63384; text-align: center;
-        }
+        #text { font-size: clamp(16px, 5vw, 22px); color: #d63384; margin-bottom: 20px; }
+        
+        /* Gambar Hewan */
+        #displayImg { width: 140px; height: 140px; object-fit: contain; margin-top: 10px; display: block; margin-left: auto; margin-right: auto; }
+        
+        /* Kue */
+        #cake { font-size: 80px; cursor: pointer; margin-top: 20px; display: none; transition: 0.3s; }
         
         .controls { margin-top: 20px; display: flex; gap: 15px; z-index: 10; }
-        button { 
-            padding: 12px 20px; cursor: pointer; border-radius: 20px; border: none; 
-            background: #ff4757; color: white; font-family: sans-serif; font-size: 14px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        button { padding: 12px 20px; cursor: pointer; border-radius: 20px; border: none; background: #ff4757; color: white; font-family: sans-serif; font-size: 14px; }
+
+        /* Overlay Ulang Tahun */
+        #hbd-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 182, 193, 0.95); z-index: 100;
+            flex-direction: column; align-items: center; justify-content: center; color: white;
+            animation: fadeIn 1s;
         }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -50,24 +52,12 @@
     <audio id="bgMusic" loop><source src="musik.mp3" type="audio/mpeg"></audio>
     <audio id="clickSound"><source src="tombol.mp3" type="audio/mpeg"></audio>
 
-    <script>
-        const emojis = ['🎂', '❤️', '🌸', '🎁', '💖'];
-        for(let i=0; i<20; i++) {
-            let div = document.createElement('div');
-            div.className = 'emoji-rain';
-            div.innerText = emojis[Math.floor(Math.random()*emojis.length)];
-            div.style.left = Math.random()*100 + 'vw';
-            div.style.animationDuration = (Math.random()*3+3) + 's';
-            div.style.animationDelay = Math.random()*5 + 's';
-            document.body.appendChild(div);
-        }
-    </script>
-
     <img id="suratBtn" src="surat.png" onclick="start()" alt="Buka Surat">
 
     <div id="letter-container">
-        <img id="paper" src="paper.png">
         <div id="text">...</div>
+        <img id="displayImg" src="" style="display:none;">
+        <div id="cake" onclick="blowCandle()">🎂</div>
     </div>
 
     <div class="controls" id="navControls" style="display:none;">
@@ -75,27 +65,60 @@
         <button onclick="playClick(); changePage(1)">Maju ➡️</button>
     </div>
 
+    <div id="hbd-overlay" onclick="this.style.display='none'">
+        <h1 style="font-size: 50px;">Happy Birthday 18th!</h1>
+        <h2 style="font-size: 30px;">Sayangku Salsa ❤️</h2>
+    </div>
+
     <script>
         const pages = [
-            "Cayankk akuhhh yang canttikk, selamt ulang tahun yahhh. Tambah tua aja, hati-hati lo nanti dipanggil tante cantik heheh.",
-            "Cayankk, aku mau bilang jaga kesehatan ya. Jujur gk nyangka udah sepanjang ini, aku harap hubungan ini akan kekal di alam mana pun.",
-            "Aku harap kita bisa cepat bertemu. Aku tahu sukses di bawah 20 tahun itu susah, tapi aku janji akan bertemu dengan Salsa yang cantik dan imut ini.",
-            "Sekali lagi selamat ultah cayankkuu. Maaf ya selama ini aku suka bikin kamu marah, bete, dan khawatir. Maaf yaa.",
-            "Aku pun sebenernya bingung kenapa setiap saat ada aja yang perlu bantuan aku. Itu aja sih, soalnya pesan ku untuk cayankk terlalu banyak, tapi gk sebanyak cintaku untukmu.",
-            "Love youuu cayankk akuhhhh. Panjang umur ya, sehat-sehat ya, sampai bertemu secara langsung di masa depan. Salam dari Aidil untuk Salsa, bunga yang paling aku cintai."
+            { text: "Cayankk akuhhh yang canttikk, selamt ulang tahun yahhh. Tambah tua aja, hati-hati lo nanti dipanggil tante cantik heheh.", img: "bebek.png" },
+            { text: "Cayankk, aku mau bilang jaga kesehatan ya. Jujur gk nyangka udah sepanjang ini, aku harap hubungan ini akan kekal di alam mana pun.", img: "rusa.png" },
+            { text: "Aku harap kita bisa cepat bertemu. Aku tahu sukses di bawah 20 tahun itu susah, tapi aku janji akan bertemu dengan Salsa yang cantik dan imut ini.", img: "anjing.png" },
+            { text: "Sekali lagi selamat ultah cayankkuu. Maaf ya selama ini aku suka bikin kamu marah, bete, dan khawatir. Maaf yaa.", img: "burung.png" },
+            { text: "Aku pun sebenernya bingung kenapa setiap saat ada aja yang perlu bantuan aku. Itu aja sih, soalnya pesan ku untuk cayankk terlalu banyak, tapi gk sebanyak cintaku untukmu.", img: "kucing.png" },
+            { text: "Love youuu cayankk akuhhhh. Panjang umur ya, sehat-sehat ya, sampai bertemu secara langsung di masa depan. Klik kue ini ya!", img: "cake" }
         ];
+
         let currentPage = 0;
         function playClick() { document.getElementById('clickSound').play(); }
+        
         function start() {
             playClick(); document.getElementById('bgMusic').play();
             document.getElementById('suratBtn').style.display = 'none';
             document.getElementById('letter-container').style.display = 'block';
             document.getElementById('navControls').style.display = 'flex';
-            document.getElementById('text').innerText = pages[0];
+            updatePage();
         }
+
+        function updatePage() {
+            const page = pages[currentPage];
+            document.getElementById('text').innerText = page.text;
+            
+            const img = document.getElementById('displayImg');
+            const cake = document.getElementById('cake');
+
+            if (page.img === "cake") {
+                img.style.display = 'none';
+                cake.style.display = 'block';
+                cake.style.filter = "none";
+            } else {
+                img.style.display = 'block';
+                img.src = page.img;
+                cake.style.display = 'none';
+            }
+        }
+
+        function blowCandle() {
+            document.getElementById('cake').style.filter = "grayscale(100%) brightness(50%)";
+            setTimeout(() => {
+                document.getElementById('hbd-overlay').style.display = 'flex';
+            }, 500);
+        }
+
         function changePage(dir) {
             currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + dir));
-            document.getElementById('text').innerText = pages[currentPage];
+            updatePage();
         }
     </script>
 </body>
