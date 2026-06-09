@@ -9,28 +9,28 @@
         body { margin: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; 
                background: url('background.png') center/cover; font-family: 'Dancing Script', cursive; overflow: hidden; }
 
-        /* Hujan Emoji di belakang kertas */
+        /* Hujan Emoji */
         .emoji-rain { position: absolute; top: -10%; font-size: 24px; animation: rain linear infinite; pointer-events: none; }
         @keyframes rain { to { transform: translateY(110vh) rotate(360deg); } }
 
+        /* Gambar Surat (Tombol) */
+        #suratBtn { width: 150px; cursor: pointer; transition: 0.3s; z-index: 10; }
+        #suratBtn:hover { transform: scale(1.1) rotate(5deg); }
+
+        /* Kertas Surat */
         #letter-container { 
             display: none; position: relative; width: 320px; height: 450px;
-            background: rgba(255,255,255,0.85); padding: 20px; border-radius: 15px;
+            background: rgba(255,255,255,0.9); padding: 20px; border-radius: 15px;
             border: 2px solid #ffccd5; box-shadow: 0 0 25px rgba(255, 105, 180, 0.5);
-            /* Efek partikel cahaya */
-            background-image: radial-gradient(circle, #fff0f5 1px, transparent 1px);
-            background-size: 20px 20px;
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
         #paper { width: 100%; height: 100%; object-fit: cover; }
         #text { position: absolute; top: 80px; left: 30px; right: 30px; font-size: 22px; color: #d63384; text-align: center; }
         
-        /* Bunga di samping frame */
-        .flower { position: absolute; width: 50px; top: -20px; z-index: 2; }
-        .flower.left { left: -20px; } .flower.right { right: -20px; }
-
         .controls { margin-top: 25px; display: flex; gap: 20px; z-index: 10; }
-        button { padding: 12px 25px; cursor: pointer; border-radius: 20px; border: none; background: #ff4757; color: white; font-family: sans-serif; transition: 0.3s; }
+        button { padding: 10px 20px; cursor: pointer; border-radius: 20px; border: none; background: #ff4757; color: white; transition: 0.3s; }
     </style>
 </head>
 <body>
@@ -51,11 +51,9 @@
         }
     </script>
 
-    <button id="openBtn" onclick="start()">Klik untuk Membuka Surat ❤️</button>
+    <img id="suratBtn" src="surat.png" onclick="start()">
 
     <div id="letter-container">
-        <img src="https://img.icons8.com/color/96/flower.png" class="flower left">
-        <img src="https://img.icons8.com/color/96/flower.png" class="flower right">
         <img id="paper" src="paper.png">
         <div id="text">...</div>
     </div>
@@ -78,7 +76,7 @@
         function playClick() { document.getElementById('clickSound').play(); }
         function start() {
             playClick(); document.getElementById('bgMusic').play();
-            document.getElementById('openBtn').style.display = 'none';
+            document.getElementById('suratBtn').style.display = 'none';
             document.getElementById('letter-container').style.display = 'block';
             document.getElementById('navControls').style.display = 'flex';
             document.getElementById('text').innerText = pages[0];
