@@ -2,52 +2,52 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Surat Spesial untuk Salsa ❤️</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
         
-        body { 
-            margin: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            background-image: url('background.png'); background-size: cover; background-position: center; 
-            font-family: 'Dancing Script', cursive; overflow: hidden;
-        }
+        body { margin: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+               background: url('background.png') center/cover; font-family: 'Dancing Script', cursive; overflow: hidden; }
         
+        /* Dekorasi Hiasan */
+        .decoration { position: absolute; font-size: 40px; pointer-events: none; animation: float 4s infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
         #letter-container { 
-            display: none; position: relative; width: 320px; height: 450px;
+            display: none; position: relative; width: 300px; height: 420px;
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255,255,255,0.8); padding: 20px; border-radius: 10px;
         }
-        
         @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
-        #paper { width: 100%; height: 100%; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3)); }
+        #paper { width: 100%; height: 100%; border: 5px solid #fff; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
+        #text { position: absolute; top: 80px; left: 40px; right: 40px; font-size: 24px; color: #d63384; text-align: center; }
         
-        #text { 
-            position: absolute; top: 70px; left: 30px; right: 30px; 
-            font-size: 22px; color: #4a4a4a; text-align: center;
-            transition: opacity 0.4s ease;
-        }
-        
-        .controls { margin-top: 25px; display: flex; gap: 20px; }
-        button { padding: 12px 25px; cursor: pointer; border-radius: 20px; border: none; background: #ff4757; color: white; transition: 0.3s; font-family: sans-serif;}
-        button:hover { transform: scale(1.1); background: #ff6b81; }
-        #openBtn { font-size: 18px; padding: 20px 40px; background: #e11d48; }
+        .controls { margin-top: 20px; display: flex; gap: 20px; z-index: 10; }
+        button { padding: 12px 25px; cursor: pointer; border-radius: 20px; border: none; background: #ff4757; color: white; transition: 0.2s; }
+        button:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
 
-    <audio id="myAudio" loop><source src="musik.mp3" type="audio/mpeg"></audio>
+    <audio id="bgMusic" loop><source src="musik.mp3" type="audio/mpeg"></audio>
+    <audio id="clickSound"><source src="tombol.mp3" type="audio/mpeg"></audio>
 
-    <button id="openBtn" onclick="startExperience()">Klik untuk Membuka Surat ❤️</button>
+    <div class="decoration" style="top: 10%; left: 10%;">🎂</div>
+    <div class="decoration" style="top: 15%; right: 10%;">🎀</div>
+    <div class="decoration" style="bottom: 15%; left: 15%;">💖</div>
+    <div class="decoration" style="bottom: 10%; right: 15%;">✨</div>
+
+    <button id="openBtn" onclick="start()">Klik untuk Buka Surat ❤️</button>
 
     <div id="letter-container">
-        <img id="paper" src="paper.png" alt="Paper">
+        <img id="paper" src="paper.png">
         <div id="text">...</div>
     </div>
 
     <div class="controls" id="navControls" style="display:none;">
-        <button onclick="changePage(-1)">⬅️ Mundur</button>
-        <button onclick="changePage(1)">Maju ➡️</button>
+        <button onclick="playClick(); changePage(-1)">⬅️ Mundur</button>
+        <button onclick="playClick(); changePage(1)">Maju ➡️</button>
     </div>
 
     <script>
@@ -59,11 +59,13 @@
             "Aku pun sebenernya bingung kenapa setiap saat ada aja yang perlu bantuan aku. Itu aja sih, soalnya pesan ku untuk cayankk terlalu banyak, tapi gk sebanyak cintaku untukmu.",
             "Love youuu cayankk akuhhhh. Panjang umur ya, sehat-sehat ya, sampai bertemu secara langsung di masa depan. Salam dari Aidil untuk Salsa, bunga yang paling aku cintai."
         ];
-        
         let currentPage = 0;
 
-        function startExperience() {
-            document.getElementById('myAudio').play();
+        function playClick() { document.getElementById('clickSound').play(); }
+
+        function start() {
+            playClick();
+            document.getElementById('bgMusic').play();
             document.getElementById('openBtn').style.display = 'none';
             document.getElementById('letter-container').style.display = 'block';
             document.getElementById('navControls').style.display = 'flex';
@@ -71,17 +73,8 @@
         }
 
         function changePage(dir) {
-            const textElement = document.getElementById('text');
-            textElement.style.opacity = 0; 
-            
-            setTimeout(() => {
-                currentPage += dir;
-                if (currentPage < 0) currentPage = 0;
-                if (currentPage >= pages.length) currentPage = pages.length - 1;
-                
-                textElement.innerText = pages[currentPage];
-                textElement.style.opacity = 1;
-            }, 400);
+            currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + dir));
+            document.getElementById('text').innerText = pages[currentPage];
         }
     </script>
 </body>
