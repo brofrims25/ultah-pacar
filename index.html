@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surat Untuk Sayang</title>
+    <title>Surat Spesial untuk Salsa ❤️</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
         
@@ -14,7 +14,7 @@
         }
         
         #letter-container { 
-            display: none; position: relative; width: 300px; height: 400px;
+            display: none; position: relative; width: 320px; height: 450px;
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
@@ -23,15 +23,15 @@
         #paper { width: 100%; height: 100%; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3)); }
         
         #text { 
-            position: absolute; top: 60px; left: 30px; right: 30px; 
-            font-size: 24px; color: #4a4a4a; text-align: center;
-            transition: opacity 0.3s ease;
+            position: absolute; top: 70px; left: 30px; right: 30px; 
+            font-size: 22px; color: #4a4a4a; text-align: center;
+            transition: opacity 0.4s ease;
         }
         
-        .controls { margin-top: 20px; display: flex; gap: 20px; }
-        button { padding: 12px 25px; cursor: pointer; border-radius: 20px; border: none; background: #ff4757; color: white; transition: 0.3s; }
+        .controls { margin-top: 25px; display: flex; gap: 20px; }
+        button { padding: 12px 25px; cursor: pointer; border-radius: 20px; border: none; background: #ff4757; color: white; transition: 0.3s; font-family: sans-serif;}
         button:hover { transform: scale(1.1); background: #ff6b81; }
-        #openBtn { font-size: 20px; padding: 20px 40px; }
+        #openBtn { font-size: 18px; padding: 20px 40px; background: #e11d48; }
     </style>
 </head>
 <body>
@@ -51,12 +51,15 @@
     </div>
 
     <script>
-        // ISI SURAT DI SINI
         const pages = [
-            "Sayang, selamat ulang tahun ya! Kamu cantik sekali hari ini.",
-            "Terima kasih sudah lahir ke dunia dan menjadi bagian hidupku.",
-            "Semoga kita selalu bersama dan bahagia selamanya. Love you!"
+            "Cayankk akuhhh yang canttikk, selamt ulang tahun yahhh. Tambah tua aja, hati-hati lo nanti dipanggil tante cantik heheh.",
+            "Cayankk, aku mau bilang jaga kesehatan ya. Jujur gk nyangka udah sepanjang ini, aku harap hubungan ini akan kekal di alam mana pun.",
+            "Aku harap kita bisa cepat bertemu. Aku tahu sukses di bawah 20 tahun itu susah, tapi aku janji akan bertemu dengan Salsa yang cantik dan imut ini.",
+            "Sekali lagi selamat ultah cayankkuu. Maaf ya selama ini aku suka bikin kamu marah, bete, dan khawatir. Maaf yaa.",
+            "Aku pun sebenernya bingung kenapa setiap saat ada aja yang perlu bantuan aku. Itu aja sih, soalnya pesan ku untuk cayankk terlalu banyak, tapi gk sebanyak cintaku untukmu.",
+            "Love youuu cayankk akuhhhh. Panjang umur ya, sehat-sehat ya, sampai bertemu secara langsung di masa depan. Salam dari Aidil untuk Salsa, bunga yang paling aku cintai."
         ];
+        
         let currentPage = 0;
 
         function startExperience() {
@@ -78,7 +81,7 @@
                 
                 textElement.innerText = pages[currentPage];
                 textElement.style.opacity = 1;
-            }, 300);
+            }, 400);
         }
     </script>
 </body>
