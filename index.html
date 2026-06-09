@@ -8,24 +8,29 @@
         
         body { margin: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; 
                background: url('background.png') center/cover; font-family: 'Dancing Script', cursive; overflow: hidden; }
-        
-        /* Dekorasi Hiasan */
-        .decoration { position: absolute; font-size: 40px; pointer-events: none; animation: float 4s infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        /* Hujan Emoji di belakang kertas */
+        .emoji-rain { position: absolute; top: -10%; font-size: 24px; animation: rain linear infinite; pointer-events: none; }
+        @keyframes rain { to { transform: translateY(110vh) rotate(360deg); } }
 
         #letter-container { 
-            display: none; position: relative; width: 300px; height: 420px;
-            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(255,255,255,0.8); padding: 20px; border-radius: 10px;
+            display: none; position: relative; width: 320px; height: 450px;
+            background: rgba(255,255,255,0.85); padding: 20px; border-radius: 15px;
+            border: 2px solid #ffccd5; box-shadow: 0 0 25px rgba(255, 105, 180, 0.5);
+            /* Efek partikel cahaya */
+            background-image: radial-gradient(circle, #fff0f5 1px, transparent 1px);
+            background-size: 20px 20px;
         }
-        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
-        #paper { width: 100%; height: 100%; border: 5px solid #fff; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
-        #text { position: absolute; top: 80px; left: 40px; right: 40px; font-size: 24px; color: #d63384; text-align: center; }
+        #paper { width: 100%; height: 100%; object-fit: cover; }
+        #text { position: absolute; top: 80px; left: 30px; right: 30px; font-size: 22px; color: #d63384; text-align: center; }
         
-        .controls { margin-top: 20px; display: flex; gap: 20px; z-index: 10; }
-        button { padding: 12px 25px; cursor: pointer; border-radius: 20px; border: none; background: #ff4757; color: white; transition: 0.2s; }
-        button:active { transform: scale(0.9); }
+        /* Bunga di samping frame */
+        .flower { position: absolute; width: 50px; top: -20px; z-index: 2; }
+        .flower.left { left: -20px; } .flower.right { right: -20px; }
+
+        .controls { margin-top: 25px; display: flex; gap: 20px; z-index: 10; }
+        button { padding: 12px 25px; cursor: pointer; border-radius: 20px; border: none; background: #ff4757; color: white; font-family: sans-serif; transition: 0.3s; }
     </style>
 </head>
 <body>
@@ -33,14 +38,24 @@
     <audio id="bgMusic" loop><source src="musik.mp3" type="audio/mpeg"></audio>
     <audio id="clickSound"><source src="tombol.mp3" type="audio/mpeg"></audio>
 
-    <div class="decoration" style="top: 10%; left: 10%;">🎂</div>
-    <div class="decoration" style="top: 15%; right: 10%;">🎀</div>
-    <div class="decoration" style="bottom: 15%; left: 15%;">💖</div>
-    <div class="decoration" style="bottom: 10%; right: 15%;">✨</div>
+    <script>
+        const emojis = ['🎂', '❤️', '🌸', '🎁', '💖'];
+        for(let i=0; i<30; i++) {
+            let div = document.createElement('div');
+            div.className = 'emoji-rain';
+            div.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+            div.style.left = Math.random()*100 + 'vw';
+            div.style.animationDuration = (Math.random()*3+3) + 's';
+            div.style.animationDelay = Math.random()*5 + 's';
+            document.body.appendChild(div);
+        }
+    </script>
 
-    <button id="openBtn" onclick="start()">Klik untuk Buka Surat ❤️</button>
+    <button id="openBtn" onclick="start()">Klik untuk Membuka Surat ❤️</button>
 
     <div id="letter-container">
+        <img src="https://img.icons8.com/color/96/flower.png" class="flower left">
+        <img src="https://img.icons8.com/color/96/flower.png" class="flower right">
         <img id="paper" src="paper.png">
         <div id="text">...</div>
     </div>
@@ -60,18 +75,14 @@
             "Love youuu cayankk akuhhhh. Panjang umur ya, sehat-sehat ya, sampai bertemu secara langsung di masa depan. Salam dari Aidil untuk Salsa, bunga yang paling aku cintai."
         ];
         let currentPage = 0;
-
         function playClick() { document.getElementById('clickSound').play(); }
-
         function start() {
-            playClick();
-            document.getElementById('bgMusic').play();
+            playClick(); document.getElementById('bgMusic').play();
             document.getElementById('openBtn').style.display = 'none';
             document.getElementById('letter-container').style.display = 'block';
             document.getElementById('navControls').style.display = 'flex';
             document.getElementById('text').innerText = pages[0];
         }
-
         function changePage(dir) {
             currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + dir));
             document.getElementById('text').innerText = pages[currentPage];
