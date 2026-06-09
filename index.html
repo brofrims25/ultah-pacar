@@ -3,53 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Sayang</title>
+    <title>Surat Untuk Sayang</title>
     <style>
-        body {
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
-            font-family: 'Arial', sans-serif;
-            color: #fff;
-            text-align: center;
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+        
+        body { margin: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: url('background.png'); background-size: cover; background-position: center; font-family: 'Dancing Script', cursive; overflow: hidden; }
+        
+        #letter-container { 
+            display: none; position: relative; width: 320px; height: 420px; 
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .container { background: rgba(255, 255, 255, 0.3); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px); }
-        img { width: 200px; height: 200px; border-radius: 50%; border: 5px solid white; margin-bottom: 20px; }
-        h1 { margin: 10px 0; font-size: 2rem; }
-        button {
-            padding: 15px 30px; font-size: 1.2rem; border: none; border-radius: 50px;
-            background: #ff4757; color: white; cursor: pointer; transition: 0.3s;
+        
+        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        #paper { width: 100%; height: 100%; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3)); }
+        
+        #text { 
+            position: absolute; top: 80px; left: 30px; right: 30px; 
+            font-size: 26px; color: #555; text-align: center;
+            transition: opacity 0.5s ease;
         }
-        button:hover { transform: scale(1.1); background: #ff6b81; }
+        
+        .controls { margin-top: 30px; display: flex; gap: 20px; }
+        button { 
+            padding: 12px 25px; cursor: pointer; border-radius: 20px; border: none; 
+            background: #ff4757; color: white; font-size: 16px; transition: 0.3s;
+        }
+        button:hover { transform: translateY(-5px); background: #ff6b81; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Ganti URL gambar di bawah dengan foto pacar kamu -->
-        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=300" alt="Pacar">
-        
-        <h1>Happy Birthday Sayang! ❤️</h1>
-        <p>Semoga harimu penuh cinta dan kebahagiaan.</p>
-        
-        <!-- Musik -->
-        <audio id="myAudio" loop>
-            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        </audio>
+    <audio id="myAudio" loop><source src="musik.mp3" type="audio/mpeg"></audio>
 
-        <button onclick="playMusic()">Klik untuk Kejutan! 🎵</button>
+    <button id="openBtn" onclick="startExperience()">Klik untuk Membuka Surat ❤️</button>
+
+    <div id="letter-container">
+        <img id="paper" src="paper.png" alt="Paper">
+        <div id="text">Ini adalah halaman pertama suratku untukmu...</div>
+    </div>
+
+    <div class="controls" id="navControls" style="display:none;">
+        <button onclick="changePage(-1)">⬅️</button>
+        <button onclick="changePage(1)">➡️</button>
     </div>
 
     <script>
-        function playMusic() {
-            var audio = document.getElementById("myAudio");
-            audio.play();
-            // Setelah tombol ditekan, tombol akan menghilang agar estetik
-            document.querySelector("button").style.display = "none";
+        const pages = [
+            "Sayang, selamat ulang tahun ya! Kamu cantik sekali hari ini.",
+            "Terima kasih sudah lahir ke dunia dan menjadi bagian hidupku.",
+            "Semoga kita selalu bersama dan bahagia selamanya. Love you!"
+        ];
+        let currentPage = 0;
+
+        function startExperience() {
+            document.getElementById('myAudio').play();
+            document.getElementById('openBtn').style.display = 'none';
+            document.getElementById('letter-container').style.display = 'block';
+            document.getElementById('navControls').style.display = 'flex';
+        }
+
+        function changePage(dir) {
+            const textElement = document.getElementById('text');
+            textElement.style.opacity = 0; // Efek fade out
+            
+            setTimeout(() => {
+                currentPage += dir;
+                if (currentPage < 0) currentPage = 0;
+                if (currentPage >= pages.length) currentPage = pages.length - 1;
+                
+                textElement.innerText = pages[currentPage];
+                textElement.style.opacity = 1; // Efek fade in
+            }, 500);
         }
     </script>
 </body>
